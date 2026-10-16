@@ -1,8 +1,14 @@
+from fastapi import APIRouter
+from pydantic import BaseModel, Field
+from helper.call_llm import call_llm, tool_output, usage
+
+router = APIRouter()
+
 class ClassifyReq(BaseModel):
     text: str
     labels: list[str] = Field(min_length=2)
 
-@app.post("/classify")
+@router.post("/classify")
 async def classify(req: ClassifyReq):
     tool = {
         "name": "record_classification",
@@ -20,4 +26,3 @@ async def classify(req: ClassifyReq):
     system = "Classify the text into exactly one of the allowed labels."
     resp = await call_llm(system, req.text, max_tokens=300, tool=tool)
     return {**tool_output(resp), "usage": usage(resp)}
-

@@ -1,10 +1,8 @@
-import os
-import anthropic
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+from fastapi import FastAPI
+from routes import classify, extract, summarise
 
-client = anthropic.AsyncAnthropic()  # reads ANTHROPIC_API_KEY
-MODEL = os.getenv("MODEL", "claude-sonnet-5-5")
 app = FastAPI(title="LLM playground")
 
-
+app.include_router(classify.router)
+app.include_router(extract.router)
+app.include_router(summarise.router)

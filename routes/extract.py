@@ -1,10 +1,16 @@
+from fastapi import APIRouter
+from pydantic import BaseModel, Field
+from helper.call_llm import call_llm, tool_output, usage
+
+router = APIRouter()
+
 class ExtractReq(BaseModel):
     text: str
     fields: dict[str, str] = Field(
         description="field name -> description, e.g. {'invoice_number': 'The invoice ID'}"
     )
 
-@app.post("/extract")
+@router.post("/extract")
 async def extract(req: ExtractReq):
     tool = {
         "name": "record_extraction",
